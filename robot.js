@@ -24,7 +24,7 @@
     up: '↑',
     down: '↓'
   };
-//Up until now, it all makes sense, I might comment with second commit if I still had doubts.
+  //Up until now, it all makes sense, I might comment with second commit if I still had doubts.
   function renderAll() {
     board.reverse();
     const root = document.getElementById('root');
@@ -83,127 +83,119 @@
       let rowHtml = '';
       let cell = '';
       for (let col = 0; col < cells.length; col++) {
-        if ( cells[col] === '.') {
-           cell = '';
-      } else {
-        cell = cells[col];
+        if (cells[col] === '.') {
+          cell = '';
+        } else {
+          cell = cells[col];
+        }
+        //const cell = cells[col] === '.' ? '' : cells[col];
+        rowHtml += `<td>${cell}</td>`;
       }
-      //const cell = cells[col] === '.' ? '' : cells[col];
-      rowHtml += `<td>${cell}</td>`;
+      tr.innerHTML = rowHtml;
     }
-    tr.innerHTML = rowHtml;
   }
-}
 
   function move() {
-  console.log('executing move()');
-  let x = robot.x;
-  let y = robot.y;
+    console.log('executing move()');
+    let x = robot.x;
+    let y = robot.y;
 
-  switch (robot.dir) {
-    case 'up':
-      if (y < board.length - 1) {
-        y = y + 1;
-      } else {
-        y;
-      }
-      //y = y < board.length - 1 ? y + 1 : y;
-      break;
-    case 'down':
-      if (y > 0) {
-        y = y - 1;
-      } else {
-        y;
-      }
-      //y = y > 0 ? y - 1 : y;
-      break;
-    case 'left':
-      if (x > 0) {
-        x = x - 1;
-      } else {
-        x;
-      }
-      //x = x > 0 ? x - 1 : x;
-      break;
-    case 'right':
-      if (x < board[0].length - 1) {
-        x = x + 1;
-      } else {
-        x;
-      }
-      //x = x < board[0].length - 1 ? x + 1 : x;
-      break;
-  }
-
-  const cell = board[y][x];
-
-  if (cell === '.' || cell === 'F' || cell === 'A') {
-    board[robot.y][robot.x] = trailIndicators[robot.dir];
-    robot.x = x;
-    robot.y = y;
-    if (cell === 'F') {
-      console.log(`flag reached in ${moves} moves and ${turns} turns`);
-      if (applesEaten > 0) {
-        console.log('total apples eaten: ' + applesEaten);
-      }
-    } else if (cell === 'A') {
-      applesEaten += 1;
-      console.log('apple eaten: YUM');
+    switch (robot.dir) {
+      case 'up':
+        if (y < board.length - 1) {
+          y = y + 1;
+        }
+        //y = y < board.length - 1 ? y + 1 : y;
+        break;
+      case 'down':
+        if (y > 0) {
+          y = y - 1;
+        }
+        //y = y > 0 ? y - 1 : y;
+        break;
+      case 'left':
+        if (x > 0) {
+          x = x - 1;
+        }
+        //x = x > 0 ? x - 1 : x;
+        break;
+      case 'right':
+        if (x < board[0].length - 1) {
+          x = x + 1;
+        }
+        //x = x < board[0].length - 1 ? x + 1 : x;
+        break;
     }
-  } else {
-    console.log('move blocked by obstacle');
+
+    const cell = board[y][x];
+
+    if (cell === '.' || cell === 'F' || cell === 'A') {
+      board[robot.y][robot.x] = trailIndicators[robot.dir];
+      robot.x = x;
+      robot.y = y;
+      if (cell === 'F') {
+        console.log(`flag reached in ${moves} moves and ${turns} turns`);
+        if (applesEaten > 0) {
+          console.log('total apples eaten: ' + applesEaten);
+        }
+      } else if (cell === 'A') {
+        applesEaten += 1;
+        console.log('apple eaten: YUM');
+      }
+    } else {
+      console.log('move blocked by obstacle');
+    }
+
+    moves += 1;
+    renderBoard();
   }
 
-  moves += 1;
-  renderBoard();
-}
+  function turn(turnDirection) {
+    if (turnDirection !== 'left' && turnDirection !== 'right') {
+      console.log('ignoring invalid turn', turnDirection);
+      return;
+    }
 
-function turn(turnDirection) {
-  if (turnDirection !== 'left' && turnDirection !== 'right') {
-    console.log('ignoring invalid turn', turnDirection);
-    return;
+    console.log('executing turn()');
+
+    switch (robot.dir) {
+      case 'up':
+        if (turnDirection === 'left') {
+          robot.dir = 'left';
+        } else {
+          robot.dir = 'right';
+        }
+        //robot.dir = turnDirection === 'left' ? 'left' : 'right';
+        break;
+      case 'down':
+        if (turnDirection === 'left') {
+          robot.dir = 'right';
+        } else {
+          robot.dir = 'left';
+        }
+        //robot.dir = turnDirection === 'left' ? 'right' : 'left';
+        break;
+      case 'left':
+        if (turnDirection === 'left') {
+          robot.dir = 'down';
+        } else {
+          robot.dir = 'up';
+        }
+        //robot.dir = turnDirection === 'left' ? 'down' : 'up';
+        break;
+      case 'right':
+        if (turnDirection === 'left') {
+          robot.dir = 'up';
+        } else {
+          robot.dir = 'down';
+        }
+        //robot.dir = turnDirection === 'left' ? 'up' : 'down';
+        break;
+    }
+
+    turns += 1;
+    renderBoard();
   }
 
-  console.log('executing turn()');
-
-  switch (robot.dir) {
-    case 'up':
-      if (turnDirection === 'left') {
-        robot.dir = 'left';
-      } else {
-        robot.dir = 'right';
-      }
-      //robot.dir = turnDirection === 'left' ? 'left' : 'right';
-      break;
-    case 'down':
-      if (turnDirection === 'left') {
-        robot.dir = 'right';
-      } else {
-        robot.dir = 'left';
-      }
-      //robot.dir = turnDirection === 'left' ? 'right' : 'left';
-      break;
-    case 'left':
-      if (turnDirection === 'left') {
-        robot.dir = 'down';
-      } else {
-        robot.dir = 'up';
-      }
-      //robot.dir = turnDirection === 'left' ? 'down' : 'up';
-      break;
-    case 'right':
-      if (turnDirection === 'left') {
-        robot.dir = 'up';
-      } else {
-        robot.dir = 'down';
-      }
-      //robot.dir = turnDirection === 'left' ? 'up' : 'down';
-      break;
-  }
-
-  turns += 1;
-  renderBoard();
-}
-
-renderAll();
-}) ();
+  renderAll();
+})();
