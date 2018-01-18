@@ -120,10 +120,12 @@
         //x = x > 0 ? x - 1 : x;
         break;
       case 'right':
-        if (x < board[0].length - 1) {
+        if (x < board[y].length - 1) {
           x = x + 1;
         }
         //x = x < board[0].length - 1 ? x + 1 : x;
+        //x = x < board[y].length - 1 ? x + 1 : x;
+
         break;
     }
 
@@ -197,5 +199,5 @@
     renderBoard();
   }
 
-  renderAll();
+  window.onload = renderAll;
 })();
